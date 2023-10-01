@@ -1,0 +1,157 @@
+This ZOMG program is a compiler that compiles ZOMG programs into ZOMG bytecode,
+written in ZOMG.
+
+TODO: Replace labels with fixed offsets. 
+
+We compile only the following ASCII characters into their two bit ZOMG bitcodes: 
+
+* zero (two zero bits)
+* one (zero one)
+* hash=M (one zero)    
+* question mark=G (one one)
+
+All other characters are treated as comments, and ignored!
+
+* d is initially zero (GO)
+* MODE is initially zero(read)
+
+* Byte zero is I/O Byte: first four bits are
+* Bit zero=GO (flip to activate, never branches--always 1)
+* Bit one=DATA (data that was read/data to write)
+* Bit two=MODE (zero for read, one for write)
+* Bit three=END (set to true on END of FILE 
+
+Label	Command		D		Comment
+loop	?		GO!		Try to read bit
+	011#		END
+	01?		!END 
+	done?				if we're at eof, we're done	
+	02#		DATA
+	11?		DATA!
+	bad_seven?			bit seven wasn't one (skip next 7 bits)
+	#?		GO!	 
+	01#		DATA	
+	01?		DATA!
+        bad_six?			bit six wasn't zero (skip next six bits)
+	#?		GO! 		
+	01#		DATA
+	bad_five?			bit five wasn't one (skip next five bits)	
+	#?		GO!
+	01#		DATA
+	tryM?				bit four wasn't one (might be bitcode M) 
+	#?		GO!	
+        01#		DATA
+	01?		DATA!
+	tryG?	        		bit three wasn't zero (mightt be bitcode G)	
+	#?		GO!	
+	01#		DATA
+	01?		DATA!
+	bad_two?			bit two wasn't zero (skip next 2 bits)
+	#?		GO!
+	01#		DATA
+	01?		DATA!
+	bad_one?			bit one wasn't zero (skip next bit)
+	#?		GO!
+        01#		DATA
+	01?		DATA!
+	O?		DATA		bit zero wasn't zero (must be bitcode O)
+
+--- bitcode Z
+Z					otherwise, bit zero was zero, so this must be bitcode Z	
+	01?		DATA!=zero
+	01#		MODE=READ
+        01?		MODE!=READ
+	#?		GO!		write zero bit
+	?		GO!		write zero bit
+	010#		MODE!=WRITE
+	01?		MODE=READ
+	#11#		negative one 	(always branch)
+        loop?		next byte
+
+-- bitcode O
+O					bit zero was one (must be bitcode O)
+			DATA=one
+	01?		DATA!=zero
+	01#		MODE=READ				
+	01?		MODE!=WRITE
+	#?		GO!		write zero bit 
+	01#		DATA!
+	01?		DATA
+        #?		GO!		write one bit 
+	010#		MODE!=WRITE
+	01?		MODE=READ
+	#11#		negative one 	(always branch)	
+	loop?		next byte
+
+tryM			DATA=one	bit 4 was zero
+	#?		GO!
+	01#		DATA
+        01?		DATA!
+	bad3?		DATA		bit 3 wasn't zero (skip next 2 bits)
+	#?		GO!
+	01#		DATA 
+	01?		DATA!
+	bad2?		DATA		bit 2 wasn't zero (skip next 2 bits)	
+	#?		GO!
+	01#		DATA	
+	bad1?		DATA!		bit 1 wasn't one (skip next bit)
+	#?		GO!
+	01#		DATA			
+        01?		DATA!
+	loop?		DATA		bit zero wasn't zero (get next byte)
+
+--- bitcode M
+M					bit zero was zero, so this is bitcode M
+        
+	01?		DATA!=one
+	01#		MODE=read			
+        01?		MODE=write
+	#?		GO!		write one
+	#1		DATA!=one
+	01?		DATA=zero
+	#?		Go!		write zero
+	010#		MODE=write
+	01?		MODE=read
+	11#				goto loop
+	loop?				
+	
+
+tryG			DATA=one	bit3 was one
+	#?		GO!
+	01#		DATA
+	bad2?				bit2 wasn't one (skip two bits)	
+	#?		GO!
+	01#		DATA
+	bad_one?			bit one wasn't one (skip one bit)
+	#?		GO!
+	01#		DATA
+	loop?				bit zero wasn't one (goto start)
+
+-- bitcode G
+G			DATA=1		bit zero was one, so this is bitcode G	
+	01#		MODE=read			
+        01?		MODE=write
+	#?		GO!		write one
+	#1		DATA!=one
+	01?		DATA=zero
+	#?		Go!		write zero
+	010#		MODE=write
+	01?		MODE=read
+	11#				goto loop
+	loop?				
+
+
+-- skipping bits
+
+bad7	#?	
+bad6	#?
+bad5	#?	
+bad4	#?
+bad3	#?		
+bad2	#?
+bad1	#?
+	11#
+	loop?
+        	
+done	10?				negative zero means switch to fixed address mode	
+	11?				exit(0)	

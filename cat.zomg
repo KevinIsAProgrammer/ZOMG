@@ -1,0 +1,13 @@
+-- A ZOMG version of cat (48 instructions/12 bytes) 
+loop	?		GO!		Try to read bit
+	011#		END
+	01?		!END		if we're at eof, we're done	 
+	001 1011?			if eof:goto +28 (done)		
+	11#		MODE		
+	01?		!MODE	
+	#?		GO!	 
+        010#           !MODE
+        01?
+        #11#		d = -1		always branch	
+        1 10 1010?      goto -42 (loop)
+done    01?11?		exit(zero)	
