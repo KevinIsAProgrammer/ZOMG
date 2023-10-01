@@ -1,8 +1,10 @@
 # ZOMG
 This project is intended to be an implementation of a virtual machine supporting the ZOMG language, a silly Turing Tarpit language that I invented that's concise but
-(barely) functional. 
+(barely) functional. The language itself is Turing Complete (it has no inherent fixed maximum addressing size). 
 
-It's called ZOMG, named after the four operations in the language "Zero", "One", "Math", and "Go", It's a bitcode encoded language,
+A virtual machine implementation will have some finite amount of addressable memory, but the language itself is not concerned with this limit.
+
+The language is called ZOMG, named after the four operations in the language ("Zero", "One", "Math", and "Go"). It's a bitcode encoded language,
 with each operation being represented by 2 bits. 
 
 # Registers
@@ -89,5 +91,32 @@ A compiler for this language accepts the above 4 ascii characters as input (and 
 
 '0' generates the **Z** bitcode (two zero bits), '1' generates the **O** bitcode (a zero bit followed by a one bit),
 '#' generates the **M** bitcode (a one bit followed by a zero it), and '?' generates the **G** bitcode (two one bits).
- 
+
+# Examples (Code Snippets)
+
+```
+# Sets D = 0 (N is initially zero; adding zero clears D)
+```
+
+```
+1# Sets D=C (Adding -0 sets D to C)
+```
+
+```
+0? In absolute mode, switch to relative mode.
+   In relative mode, flip bit at D and branch to current address if result is not 1 (set bit at D)
+```
+
+```
+1? Set absolute mode (even if already in absolute mode)
+```
+
+```
+1?0? Set relative mode
+```
+
+``` 
+01? Flip bit at D. (If it's 1, jump ahead 1 to next instruction. Otherwise, go on to next instruction).
+```
+
 
