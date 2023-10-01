@@ -18,7 +18,7 @@ with each operation being represented by 2 bits.
    The other 7 bits specify which I/O event to perform, and may also be modified by an I/O event. 
    For example, the DATA bit is set during a read event, and sent during a write event. 
    
-   See the section on ZOMG I/O formore information.
+   See the section on ZOMG I/O for more information.
 
    All references to addresses less than zero are treated as access to zeroed read-only memory: a zero value is read, 
    the result is flipped to a 1 (meaning branches always succeed), but the flipped value is not written back to the negative memory address.
@@ -53,7 +53,6 @@ Loop: U=1, S=0, V=0
       if C < 0:
           exit( abs(C)-1)
       symbol= M[c] // read 2 bits
-      set_c = 0
       set_c = handle symbol(symbol) // call appropriate operation for symbol (ZERO, ONE, MATH, or GO)
       if (!set_c)
           C +=2
