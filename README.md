@@ -8,15 +8,20 @@ The language is called ZOMG, named after the four operations in the language ("Z
 with each operation being represented by 2 bits. 
 
 # Registers
- **M**: Memory An array of bits, addressed by bit address. 
+ **M**: Memory An array of bits, addressed by bit address.
+ 
     The first 8 bits of M are special and are used in ZOMG I/O and system calls. 
 
     I/O occurs when a GO command attempts to flip the bit at memory address 0. The associated branch
     always fails. 
 
    The other 7 bits specify which I/O event to perform, and may also be modified by an I/O event. 
-   For example, the DATA bit is set during a read event, and sent during a write event. See the section on ZOMG I/O for
-   more information.
+   For example, the DATA bit is set during a read event, and sent during a write event. 
+   
+   See the section on ZOMG I/O formore information.
+
+   All references to addresses less than zero are treated as access to zeroed read-only memory: a zero value is read, 
+   the result is flipped to a 1 (meaning branches always succeed), but the flipped value is not written back to the negative memory address.
      
  **C**: Pointer to 2 bits (code pointer address) The bit address of next bitcode operation to fetch from memory.
  
@@ -61,12 +66,12 @@ ONE: IF U=0, S = 1, U=1
      Otherwise, V=2V + 1, C+=2
      return 0
 
-MATH: IF N = -0: D=C
+MA TH:   IF N = -0: D=C
       else if N = 0: D=0
       else D += N
       return 0
 
-GO:   IF N = -0: F=1 			   // set fixed mode
+GO:   IF N = -0: F=1  // set fixed mode
       else IF F = 1 & N = 0: F = 0 // from fixed mode, switch back to relative mode 
       else 
             IF D > 0 
