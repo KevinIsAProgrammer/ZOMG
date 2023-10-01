@@ -47,7 +47,7 @@ Loop: U=1, S=0, V=0
           exit( abs(C)-1)
       symbol= M[c] // read 2 bits
       set_c = 0
-      set_c = handle symbol(symbol) // goto appropriate operation for symbol (ZERO, ONE, MATH, or GO)
+      set_c = handle symbol(symbol) // call appropriate operation for symbol (ZERO, ONE, MATH, or GO)
       if (!set_c)
           C +=2
       
