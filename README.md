@@ -104,7 +104,7 @@ A compiler for this language accepts the above 4 ascii characters as input (and 
 
 ```
 0? In absolute mode, switch to relative mode.
-   In relative mode, flip bit at D and branch to current address if result is not 1 (set bit at D)
+   In relative mode, clear bit at D (flip bit at D and branch back to current address if flipped bit is 1)
 ```
 
 ```
@@ -119,4 +119,23 @@ A compiler for this language accepts the above 4 ascii characters as input (and 
 01? Flip bit at D. (If it's 1, jump ahead 1 to next instruction. Otherwise, go on to next instruction).
 ```
 
+# ZOMG I/O
 
+Zomg implementations are expected to implement the functionality of at least the first 4 bits (bitwise input and output to a standard input and output, with field separators, and end of transmission markers). 
+
+Full implementations should include all 8 bits where a corresponding operating system equivalent exists.
+
+```
+Bit Address       Meaning
+0                 GO! (Do the operation specified by the other flags when this bit is flipped)
+1                 DATA (the bit to read or write)
+2                 MODE (0=READ, 1=WRITE)
+3                 END? (0=FALSE, 1=TRUE) (If True & DATA=0, this signals end of field. Otherwise, it signals end of transmission)
+
+4                 STATUS(0=ERR, 1=OK)
+5                 SYS(When set, peform system calls. Write => set call & arguments, each in a separate field. After end of transmission, call is performed and result may be read)
+6                 CHANNEL (When set, write bits to set which file descriptors standard input, output, and error map to; read to determine what current settings map to)
+7                 ERR (When set, writes go to standard error, and reads read bits of the the errorno status variable)
+
+Only one of the SYS, CHANNEL, and ERR flags should be set at one time.
+```
