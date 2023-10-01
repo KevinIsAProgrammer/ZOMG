@@ -33,6 +33,8 @@ Registers:
 
 *Operation of the VM*: 
 
+
+```
 Loop: U=1, S=0, V=0 
       if C < 0:
           exit( abs(C)-1)
@@ -69,6 +71,7 @@ GO:   IF N = -0: F=1 			   // set fixed mode
                else C += 2*N		  // in relative mode, N specifies the number of symbols to offset C by. 
                return 1 
       return 0
+```
 
 ZOMG bitcode runs inside a VM with the semantics given above.
 
