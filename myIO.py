@@ -1,13 +1,16 @@
+import os
 class Buffer(object):
     def __init__(self, word_size, num_words):
         self.word_size = word_size
         self.num_words = num_words
         self.max = word_size * num_words
         self.have_eof = False
-        self.clear()
 
-        self.have_read=False # mock reading for now
-    
+        self.buf=[False] *(self.max)
+        self.pos=word_size -1
+        self.word_num = num_words 
+        self.last_word = True 
+
     def set_word(self, word_num, word):
         if (word_num > self.num_words - 1):
             print("error: invalid word number " + word_num)
@@ -83,17 +86,22 @@ class Buffer(object):
 
             word, status = self.read_word()
                 
-            if not(status):
+            if not(status): 
                 return False
-            self.set_word(i, word)
+            if not(self.have_eof):
+               self.set_word(i, word)
         return True
 
     def read_word(self):
-        self.have_read=True
-        return 65, True
+        # read from stdin
+        word = os.read(0,1)
+        if len(word) == 0:
+            self.have_eof = True
+            return 0, True 
+        return ord(word), True
 
     def is_eof(self):
-        return self.have_read
+        return self.have_eof
 
 
     def write(self, bit, end):
@@ -128,5 +136,8 @@ class Buffer(object):
             Write a word to output
         """
         print("Writing word"+str(word))
+        status=os.write(word,1)
+        return status == 1
+
 
 
