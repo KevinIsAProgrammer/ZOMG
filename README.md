@@ -1,6 +1,5 @@
 # ZOMG
-This project is intended to be an implementation of a virtual machine supporting the ZOMG language, a silly Turing Tarpit language that I invented that's concise but
-(barely) functional. The language itself is Turing Complete (it has no inherent fixed maximum addressing size). 
+This project is intended to be an implementation of a virtual machine supporting the ZOMG language, a little Turing Tarpit language that I invented that's concise but  functional. The language itself is Turing Complete (it has no inherent fixed maximum addressing size). 
 
 A virtual machine implementation will have some finite amount of addressable memory, but the language itself is not concerned with this limit.
 
@@ -37,7 +36,7 @@ with each operation being represented by 2 bits.
     The first ZERO or ONE operation sets the sign of N to positive or negative and subsequent operations append bits to it's 
     absolute value in msb order. If no sign has been set, the sign is positive.  If no value has been set, the value is zero. 
 
-    N := -1^S * V if U, and (+) V otherwise.
+    N := -1^S * V if U, and (+) V otherwise. The value -0 is allowed.
 
  **V**:  Value (unsigned) Absolute value of N
 
@@ -58,14 +57,14 @@ Loop: U=1, S=0, V=0
           C +=2
       
 ZERO: IF U=0: S = 0, U = 1 
-      Otherwise, V=2*V, C+=2 
+      Otherwise, V=2*V 
       return 0
 
 ONE: IF U=0, S = 1, U=1
-     Otherwise, V=2V + 1, C+=2
+     Otherwise, V=2V + 1
      return 0
 
-MA TH:   IF N = -0: D=C
+MATH:   IF N = -0: D=C
       else if N = 0: D=0
       else D += N
       return 0
