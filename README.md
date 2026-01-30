@@ -1,6 +1,5 @@
 # ZOMG
-This project is intended to be an implementation of a virtual machine supporting the ZOMG language, a silly Turing Tarpit language that I invented that's concise but
-(barely) functional. The language itself is Turing Complete (it has no inherent fixed maximum addressing size). 
+This project is intended to be an implementation of a virtual machine supporting the ZOMG language, a little Turing Tarpit language that I invented that's concise but  functional. The language itself is Turing Complete (it has no inherent fixed maximum addressing size). 
 
 A virtual machine implementation will have some finite amount of addressable memory, but the language itself is not concerned with this limit.
 
