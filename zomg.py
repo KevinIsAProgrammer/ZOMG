@@ -1,13 +1,24 @@
 #!/bin/python3
 
-from io import io
+from my_io import IO 
 from mem import Mem
 from pickle import dump,load
 
 class ZOMG(object):
+    """
+    Usage: from zomg import ZOMG
+    vm = ZOMG(size)
+
+    // enter a ZOMG program
+    vm.m[address] = True / False
+    ...
+    // run a ZOMG program
+    vm.c = <start address>
+    vm.step() / vm.run()
+    """
     def __init__(self, size):
         self.m = Mem(size)
-
+        self.io = IO()
         self.f = False # Fixed addressing mode (False for relative, True for fixed)
 
         self.c = 0
@@ -141,7 +152,9 @@ class ZOMG(object):
 
     def do_io(self, bits):
         print("I/O", bits)
-        io(bits)
+        result = self.io.do_io(bits)
+        print("Result", result)
+        self.m[0:8] = result
 
     def save(self, name, start, end):
         f=open(name,"wb")
