@@ -65,7 +65,7 @@ ONE: IF U=0, S = 1, U=1
      Otherwise, V=2V + 1, C+=2
      return 0
 
-MA TH:   IF N = -0: D=C
+MATH:   IF N = -0: D=C
       else if N = 0: D=0
       else D += N
       return 0
