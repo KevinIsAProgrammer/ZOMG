@@ -40,8 +40,3 @@ class Buffer(object):
         self.pos=self.word_size - 1
         self.word_num = 0
         self.last_word = False
-    
-
-
-
-

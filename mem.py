@@ -27,19 +27,20 @@ class Symbol(object):
 class Mem(object):
      def __init__(self, size):
           self.mem = [False] * size
+          self.size = size
 
      def __repr__(self):
          return self.data()
 
      def code(self):
          s=""
-         for i in range(0, len(self.mem), 2):
+         for i in range(0, self.size, 2):
              s += str(self.symbol(i))
          return s
 
      def data(self):
          s=""
-         for i in range(0,len(self.mem),2):
+         for i in range(0,self.size,2):
                s+=self.at(i)+self.at(i+1)+ " "
          return s
 
@@ -54,30 +55,34 @@ class Mem(object):
          return Symbol(b1,b2)
 
      def flip(self, address):
+         if address >= self.size:
+             return False
+         if address < 0: 
+             return True
          b1 = self.mem[address]
          self.mem[address] = not(b1)
-         return self
+         return self.mem[address] 
 
      def at(self,address):
          return self.bit(self.at_(address))
 
      def at_(self, address):
-         if (address > len(self.mem)-1):
+         if (address >= self.size):
              return False
          elif address > 0:
             return self.mem[address]
          elif address == 0:
             return False
          else:
-            return True
+            return True 
 
-     def save(self, name):
-         f = open(name,"wb")
-         pickle.dump(self, f)
-         f.close()
-     
-     def load(name):
-         f = open(name, "rb")
-         m=pickle.load(f)
-         f.close()
-         return m
+     def readFile(self, name, address=8):
+
+         pos = address
+         handle=open(name,"rb")
+
+         data=handle.read()
+         for b in data:
+            for shift in range(7,-1,-1):
+                self.mem[pos] = (b >> shift & 1) == 1 
+                pos += 1

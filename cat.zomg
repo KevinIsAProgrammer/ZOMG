@@ -1,4 +1,4 @@
--- A ZOMG version of cat (52 instructions / 4 per byte = 12 bytes)
+-- A ZOMG version of cat (52 instructions / 4 per byte = thirteen bytes)
 loop	#?		GO!		Try to read bit
 	011#		END
 	0100?		!END		if we're at eof, we're done	 

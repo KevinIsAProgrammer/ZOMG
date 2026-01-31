@@ -12,7 +12,7 @@ class BitWriter(Buffer):
         """ Write bits to the buffer until we send an end bit or hit
             the end of the buffer.
         """
-        print("pos=",self.pos)
+        #print("pos=",self.pos)
         if end:
             if bit:
                 for i in range(0, self.num_words):
@@ -44,6 +44,6 @@ class BitWriter(Buffer):
         """
             Write a word to output
         """
-        print("Writing word"+str(word))
+        #print("Writing word"+str(word))
         status=os.write(1, word.to_bytes())
         return status == 1
