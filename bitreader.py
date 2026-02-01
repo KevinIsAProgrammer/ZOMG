@@ -31,7 +31,7 @@ class BitReader(Buffer):
             return True, True, True
 
         p = self.word_num * self.word_size + self.pos
-        print("p="+str(p))
+        #print("p="+str(p))
         # get the index of our bit in the buffer, and
         # then decrement down to the next bit
         self.pos -= 1

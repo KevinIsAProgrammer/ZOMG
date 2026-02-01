@@ -28,6 +28,8 @@ class ZOMG(object):
         self.u = True  # Unset Sign? (True if sign hasn't been set, False otherwise)
         self.s = True  # Sign of n (True for positive, False for negative)
 
+        self.debug=True # start running in debug mode
+
     def __repr__(self):
         return (repr(self.m) + "\n" +
                 "f="+repr(self.f) +"\n" +
@@ -66,15 +68,15 @@ class ZOMG(object):
               self.step()
 
     def invalid(self, address):
-        print("Invalid address:" + address)
+        self.show("Invalid address:" + address)
         self.run=False    
 
     def exit(self,code):
-        print("exit("+str(code)+")") 
+        self.show("exit("+str(code)+")") 
         self.run=False
 
     def handle_symbol(self, symbol):
-        print("Handling " + str(symbol))
+        self.show("Handling " + str(symbol))
         if symbol == "0":
            return self.zero()
         elif symbol == "1":
@@ -114,12 +116,12 @@ class ZOMG(object):
 
     def go(self):
         if not(self.s) and self.v==0:		# -0 sets fixed addressing
-           print("Set fixed addressing")
+           self.show("Set fixed addressing")
            self.f = True 
            self.clear_n()
            return True 
         elif self.f and self.s and self.v == 0: # +0 sets relative from fixed 
-           print("Set relative addressing")
+           self.show("Set relative addressing")
            self.f = True
            self.clear_n()
            return True
@@ -129,32 +131,32 @@ class ZOMG(object):
              return True
         
         if self.d == 0:
-           self.do_io(self.m[0:8]) 
+           self.do_io(self.m.mem[0:8]) 
            b = False
         else: 
            b = self.m.flip(self.d) 
-           print("d="+str(self.d))
-           print("Result of flip was:" + str(b)) 
+           self.show("d="+str(self.d))
+           self.show("Result of flip was:" + str(b)) 
         if b:
-           print("Branch was true")
+           self.show("Branch was true")
            if self.f:
-              print("Branch to fixed offset"+str(self.n()))
+              self.show("Branch to fixed offset"+str(self.n()))
               self.c = self.n()
            else:      
-              print("Branch to relative offset"+str(2*self.n()))
+              self.show("Branch to relative offset"+str(2*self.n()))
               self.c += 2 * self.n()
            self.clear_n()
            return False
         else:
-           print("Branch was false")
+           self.show("Branch was false")
            self.clear_n()
            return True
 
     def do_io(self, bits):
-        print("I/O", bits)
+        self.show("I/O", bits)
         result = self.io.do_io(bits)
-        print("Result", result)
-        self.m[0:8] = result
+        self.show("Result", result)
+        self.m.mem[0:8] = result
 
     def save(self, name, start, end):
         f=open(name,"wb")
@@ -176,3 +178,8 @@ class ZOMG(object):
         
     def code(self):
         return self.m.code()
+
+    def show(self, *msg, **kw):
+        if self.debug:
+            print(*msg, **kw)
+

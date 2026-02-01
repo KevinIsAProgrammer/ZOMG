@@ -20,7 +20,7 @@ class BitWriter(Buffer):
                     if not(status):
                         return False
                 self.clear()
-                os.close(1)
+                #os.close(1)
 
         
         if self.pos < 0 or (end and not(bit)):
