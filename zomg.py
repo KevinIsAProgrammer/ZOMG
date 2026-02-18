@@ -73,6 +73,7 @@ class ZOMG(object):
 
     def exit(self,code):
         self.show("exit("+str(code)+")") 
+        self.exit_status=code
         self.run=False
 
     def handle_symbol(self, symbol):
@@ -122,7 +123,7 @@ class ZOMG(object):
            return True 
         elif self.f and self.s and self.v == 0: # +0 sets relative from fixed 
            self.show("Set relative addressing")
-           self.f = True
+           self.f = False 
            self.clear_n()
            return True
         elif self.f and not(self.s):		# -n in fixed mode exits
